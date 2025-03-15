@@ -1,0 +1,317 @@
+/* client/src/styles/Dashboard.css */
+
+.dashboard {
+    font-family: 'Arial', sans-serif;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+   }
+   .dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+   }
+   .dashboard-header h1 {
+    font-size: 24px;
+    color: #333;
+   }
+   .user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+   }
+   .user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+   }
+   .logout-btn {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+   }
+   .dashboard-stats {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+   }
+   .stat-card {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    width: 30%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+   }
+   .stat-card h3 {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 10px;
+    font-weight: normal;
+   }
+   .stat-value {
+    font-size: 36px;
+    font-weight: bold;
+    color: #333;
+    margin: 0;
+   }
+   .dashboard-tabs {
+    display: flex;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #ddd;
+   }
+   .tab-btn {
+    background: none;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    color: #666;
+    position: relative;
+   }
+   .tab-btn.active {
+    color: #4285F4;
+   }
+   .tab-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #4285F4;
+   }
+   .inventory-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+   }
+   .search-input {
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    flex-grow: 1;
+    margin-right: 15px;
+   }
+   .add-item-btn {
+    background-color: #4285F4;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+   }
+   .inventory-table {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+   }
+   table {
+    width: 100%;
+    border-collapse: collapse;
+   }
+   th, td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+   }
+   th {
+    background-color: #f9f9f9;
+    font-weight: 600;
+    color: #666;
+   }
+   .stock-control {
+    display: flex;
+    align-items: center;
+   }
+   .stock-btn {
+    width: 30px;
+    height: 30px;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+   }
+   .stock-value {
+    padding: 0 15px;
+   }
+   .status-badge {
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+   }
+   .status-badge.in-stock {
+    background-color: #e6f7e6;
+    color: #28a745;
+   }
+   .status-badge.low-stock {
+    background-color: #fff3cd;
+    color: #ffc107;
+   }
+   .status-badge.out-of-stock {
+    background-color: #f8d7da;
+    color: #dc3545;
+   }
+   .action-buttons {
+    display: flex;
+    gap: 5px;
+   }
+   .sell-btn {
+    background-color: #4285F4;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+   }
+   .sell-btn:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+   }
+   .sell-btn:hover {
+    background-color: #13e433;
+   }
+   .edit-btn{
+    background: #FFD700; 
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 5px;
+   }
+   .delete-btn {
+    background: #fa3306; 
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 5px;
+   }
+   .edit-icon, .delete-icon {
+    font-style: normal;
+   }
+   .delete-btn:hover {
+    background-color: #666;
+   }
+   .edit-btn:hover {
+    background-color: #17a2e8;
+   }
+   .transactions-section {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+   }
+   .transactions-section h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: #333;
+   }
+   /* Modal CSS might be in a separate file, but adding related styles here */
+   .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+   }
+   .modal {
+    background-color: white;
+    border-radius: 8px;
+    width: 500px;
+    max-width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+   }
+   .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid #ddd;
+   }
+   .modal-header h2 {
+    margin: 0;
+    font-size: 20px;
+   }
+   .close-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #666;
+   }
+   form {
+    padding: 20px;
+   }
+   .form-group {
+    margin-bottom: 15px;
+   }
+   .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+   }
+   .form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+   }
+   .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 15px 20px;
+    border-top: 1px solid #ddd;
+   }
+   .cancel-btn {
+    background-color: #f5f5f5;
+    color: #333;
+    border: 1px solid #ddd;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+   }
+   .save-btn {
+    background-color: #4285F4;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+   }
+   /* Responsive styles */
+   @media (max-width: 768px) {
+    .dashboard-stats {
+    flex-direction: column;
+    gap: 15px;
+    }
+    .stat-card {
+    width: 100%;
+    }
+    .inventory-actions {
+    flex-direction: column;
+    gap: 10px;
+    }
+    .search-input {
+    margin-right: 0;
+    margin-bottom: 10px;
+    }
+    .table-responsive {
+    overflow-x: auto;
+    }
+   }
