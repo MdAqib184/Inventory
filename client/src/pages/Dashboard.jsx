@@ -7,6 +7,8 @@ import AddItemModal from '../components/AddItemModal';
 import EditItemModal from '../components/EditItemModal';
 import SellModal from '../components/SellModal';
 
+const API_URL = "https://inventory-eef5.onrender.com";
+
 const Dashboard = () => {
     const { user, logout } = React.useContext(AuthContext);
     const [activeTab, setActiveTab] = useState('inventory');
@@ -33,7 +35,7 @@ const Dashboard = () => {
 
     const fetchInventory = async () => {
         try {
-            const res = await axios.get('/api/inventory');
+            const res = await axios.get(`${API_URL}/api/inventory`);
             setInventoryItems(res.data);
         } catch (error) {
             console.error('Failed to fetch inventory:', error);
@@ -42,7 +44,7 @@ const Dashboard = () => {
 
     const fetchStats = async () => {
         try {
-            const res = await axios.get('/api/inventory/stats');
+            const res = await axios.get(`${API_URL}/api/inventory/stats`);
             setStats(res.data);
         } catch (error) {
             console.error('Failed to fetch stats:', error);
@@ -51,7 +53,7 @@ const Dashboard = () => {
     
     const fetchTransactions = async () => {
         try {
-            const res = await axios.get('/api/transactions');
+            const res = await axios.get(`${API_URL}/api/transactions`);
             setTransactions(res.data);
         } catch (error) {
             console.error('Failed to fetch transactions:', error);
@@ -60,7 +62,7 @@ const Dashboard = () => {
 
     const handleAddItem = async (newItem) => {
         try {
-            await axios.post('/api/inventory', newItem);
+            await axios.post(`${API_URL}/api/inventory`, newItem);
             fetchInventory();
             fetchStats();
             setShowAddModal(false);
@@ -71,7 +73,7 @@ const Dashboard = () => {
 
     const handleUpdateItem = async (id, updatedItem) => {
         try {
-            await axios.put(`/api/inventory/${id}`, updatedItem);
+            await axios.put(`${API_URL}/api/inventory/${id}`, updatedItem);
             fetchInventory();
             fetchStats();
         } catch (error) {
@@ -82,7 +84,7 @@ const Dashboard = () => {
     const handleDeleteItem = async (id) => {
         if (window.confirm('Are you sure you want to delete this item?')) {
             try {
-                await axios.delete(`/api/inventory/${id}`);
+                await axios.delete(`${API_URL}/api/inventory/${id}`);
                 fetchInventory();
                 fetchStats();
             } catch (error) {
@@ -95,7 +97,7 @@ const Dashboard = () => {
     const handleDeleteTransaction = async (id) => {
         if (window.confirm('Are you sure you want to delete this transaction?')) {
             try {
-                await axios.delete(`/api/transactions/${id}`);
+                await axios.delete(`${API_URL}/api/transactions/${id}`);
                 fetchTransactions();
                 // Optionally refresh stats if they're affected by transaction deletion
                 fetchStats();
@@ -123,7 +125,7 @@ const Dashboard = () => {
             } else if (newStock <= 5) {
                 updatedItem.status = 'Low Stock';
             }
-            await axios.put(`/api/inventory/${id}`, updatedItem);
+            await axios.put(`${API_URL}/api/inventory/${id}`, updatedItem);
             
             // Record the transaction
             const transaction = {
@@ -137,7 +139,7 @@ const Dashboard = () => {
                 transactionDate: new Date().toISOString()
             };
             
-            await axios.post('/api/transactions', transaction);
+            await axios.post(`${API_URL}/api/transactions`, transaction);
             
             // Refresh data
             fetchInventory();
