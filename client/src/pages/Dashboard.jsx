@@ -91,6 +91,20 @@ const Dashboard = () => {
         }
     };
 
+    // New function to handle transaction deletion
+    const handleDeleteTransaction = async (id) => {
+        if (window.confirm('Are you sure you want to delete this transaction?')) {
+            try {
+                await axios.delete(`/api/transactions/${id}`);
+                fetchTransactions();
+                // Optionally refresh stats if they're affected by transaction deletion
+                fetchStats();
+            } catch (error) {
+                console.error('Failed to delete transaction:', error);
+            }
+        }
+    };
+
     // Updated to handle multi-quantity sales
     const handleSellItem = async (id, quantity) => {
         try {
@@ -315,6 +329,7 @@ const Dashboard = () => {
                                     <th>TOTAL AMOUNT</th>
                                     <th>TRANSACTION TYPE</th>
                                     <th>DATE & TIME</th>
+                                    <th>ACTIONS</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -334,11 +349,21 @@ const Dashboard = () => {
                                                 </span>
                                             </td>
                                             <td>{formatDate(transaction.transactionDate)}</td>
+                                            <td>
+                                                <div className="action-buttons">
+                                                    <button
+                                                        className="delete-btn"
+                                                        onClick={() => handleDeleteTransaction(transaction.id)}
+                                                    >
+                                                        <Trash2 size={16} />
+                                                    </button>
+                                                </div>
+                                            </td>
                                         </tr>
                                     ))
                                 ) : (
                                     <tr>
-                                        <td colSpan="9" className="no-data">No transactions found</td>
+                                        <td colSpan="10" className="no-data">No transactions found</td>
                                     </tr>
                                 )}
                             </tbody>
