@@ -15,12 +15,19 @@ dotenv.config();
 
 const app = express();
 // Middleware
-app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
+app.use(cors({ 
+    origin: ['https://inventory-liard.vercel.app', 'http://localhost:3000'], 
+    credentials: true 
+}));
 app.use(express.json());
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
+    cookie: {
+        secure: true, 
+        sameSite: 'none' 
+    }
 }));
 
 // Initialize Passport
@@ -35,7 +42,7 @@ mongoose.connect(process.env.MONGODB_URI)
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: '/auth/google/callback'
+    callbackURL: 'https://inventory-eef5.onrender.com/auth/google/callback'
 }, async (accessToken, refreshToken, profile, done) => {
     try {
         // Find existing user
