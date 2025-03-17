@@ -32,9 +32,9 @@ const Login = () => {
   }
 
   const handleGoogleLogin = () => {
-    window.location.href = 'http://localhost:5000/auth/google';
+    window.location.href = 'https://inventory-eef5.onrender.com/auth/google';
   };
-
+  
   const handleChange = (e) => {
     setFormData({
       ...formData,

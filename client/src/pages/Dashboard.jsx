@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Trash2, Edit } from 'lucide-react';
 import axios from 'axios';
-import { AuthContext } from '../contexts/AuthContext';
+import { Header } from '../components/Header';
+import { StatCard } from '../components/StatCard';
+import { Tabs } from '../components/Tabs';
+import { InventorySection } from '../components/InventorySection';
+import { TransactionsSection } from '../components/TransactionsSection';
 import '../styles/Dashboard.css';
 import AddItemModal from '../components/AddItemModal';
 import EditItemModal from '../components/EditItemModal';
@@ -10,7 +13,6 @@ import SellModal from '../components/SellModal';
 const API_URL = "https://inventory-eef5.onrender.com";
 
 const Dashboard = () => {
-    const { user, logout } = React.useContext(AuthContext);
     const [activeTab, setActiveTab] = useState('inventory');
     const [inventoryItems, setInventoryItems] = useState([]);
     const [transactions, setTransactions] = useState([]);
@@ -50,7 +52,7 @@ const Dashboard = () => {
             console.error('Failed to fetch stats:', error);
         }
     };
-    
+
     const fetchTransactions = async () => {
         try {
             const res = await axios.get(`${API_URL}/api/transactions`);
@@ -113,10 +115,10 @@ const Dashboard = () => {
             // Find the item details to record in the transaction
             const itemToSell = inventoryItems.find(item => item.id === id);
             if (!itemToSell) return;
-            
+
             // Calculate new stock
             const newStock = itemToSell.stock - quantity;
-            
+
             // Update inventory stock
             const updatedItem = { stock: newStock };
             // Update status if necessary
@@ -126,7 +128,7 @@ const Dashboard = () => {
                 updatedItem.status = 'Low Stock';
             }
             await axios.put(`${API_URL}/api/inventory/${id}`, updatedItem);
-            
+
             // Record the transaction
             const transaction = {
                 itemId: itemToSell.id,
@@ -138,9 +140,9 @@ const Dashboard = () => {
                 transactionType: 'Sale',
                 transactionDate: new Date().toISOString()
             };
-            
+
             await axios.post(`${API_URL}/api/transactions`, transaction);
-            
+
             // Refresh data
             fetchInventory();
             fetchStats();
@@ -165,7 +167,7 @@ const Dashboard = () => {
         item.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.id.toLowerCase().includes(searchTerm.toLowerCase())
     );
-    
+
     const filteredTransactions = transactions.filter(transaction =>
         transaction.itemName.toLowerCase().includes(transactionSearchTerm.toLowerCase()) ||
         transaction.itemId.toLowerCase().includes(transactionSearchTerm.toLowerCase()) ||
@@ -176,202 +178,38 @@ const Dashboard = () => {
     const formatDate = (dateString) => {
         return new Date(dateString).toLocaleString();
     };
-    
+
     return (
         <div className="dashboard">
-            <header className="dashboard-header">
-                <h1>Mama Inventory Management</h1>
-                <div className="user-info">
-                    {user && (
-                        <>
-                            <img src={user.picture} alt={user.name} className="user-avatar" />
-                            <span>{user.name}</span>
-                            <button onClick={logout} className="logout-btn">Logout</button>
-                        </>
-                    )}
-                </div>
-            </header>
+            <Header />
             <div className="dashboard-stats">
-                <div className="stat-card">
-                    <h3>TOTAL ITEMS IN STOCK</h3>
-                    <p className="stat-value">{stats.totalItems}</p>
-                </div>
-                <div className="stat-card">
-                    <h3>TOTAL INVENTORY AMOUNT</h3>
-                    <p className="stat-value">₹{stats.totalValue.toLocaleString()}</p>
-                </div>
-                <div className="stat-card">
-                    <h3>LOW STOCK ALERTS</h3>
-                    <p className="stat-value">{stats.lowStockAlerts}</p>
-                </div>
+                <StatCard title="TOTAL ITEMS IN STOCK" value={stats.totalItems} />
+                <StatCard title="TOTAL INVENTORY AMOUNT" value={stats.totalValue} isCurrency />
+                <StatCard title="LOW STOCK ALERTS" value={stats.lowStockAlerts} />
             </div>
-            <div className="dashboard-tabs">
-                <button
-                    className={`tab-btn ${activeTab === 'inventory' ? 'active' : ''}`}
-                    onClick={() => setActiveTab('inventory')}
-                >
-                    Inventory
-                </button>
-                <button
-                    className={`tab-btn ${activeTab === 'transactions' ? 'active' : ''}`}
-                    onClick={() => setActiveTab('transactions')}
-                >
-                    Transactions
-                </button>
-            </div>
+            <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
+
             {activeTab === 'inventory' && (
-                <div className="inventory-section">
-                    <div className="inventory-actions">
-                        <input
-                            type="text"
-                            placeholder="Search items..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            className="search-input"
-                        />
-                        <button
-                            className="add-item-btn"
-                            onClick={() => setShowAddModal(true)}
-                        >
-                            Add New Item
-                        </button>
-                    </div>
-                    <div className="inventory-table">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>NAME</th>
-                                    <th>CATEGORY</th>
-                                    <th>PRICE</th>
-                                    <th>STOCK</th>
-                                    <th>STATUS</th>
-                                    <th>LAST UPDATED</th>
-                                    <th>ACTIONS</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {filteredItems.map(item => (
-                                    <tr key={item.id}>
-                                        <td>{item.id}</td>
-                                        <td>{item.name}</td>
-                                        <td>{item.category}</td>
-                                        <td>₹{item.price}</td>
-                                        <td>
-                                            <div className="stock-control">
-                                                <div
-                                                    onClick={() => handleUpdateItem(item.id, { stock: Math.max(0, item.stock - 1) })}
-                                                >
-                                                </div>
-                                                <span className="stock-value">{item.stock}</span>
-                                                <div
-                                                    onClick={() => handleUpdateItem(item.id, { stock: item.stock + 1 })}
-                                                >
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <span className={`status-badge ${item.status.toLowerCase().replace(/\s+/g, '-')}`}>
-                                                {item.status}
-                                            </span>
-                                        </td>
-                                        <td>{new Date(item.lastUpdated).toLocaleString()}</td>
-                                        <td>
-                                            <div className="action-buttons">
-                                                <button
-                                                    className="sell-btn"
-                                                    onClick={() => handleSellClick(item)}
-                                                    disabled={item.stock <= 0}
-                                                >
-                                                    Sell
-                                                </button>
-                                                <button
-                                                    className="edit-btn"
-                                                    onClick={() => handleEditClick(item)}
-                                                >
-                                                    <Edit size={16} />
-                                                </button>
-                                                <button
-                                                    className="delete-btn"
-                                                    onClick={() => handleDeleteItem(item.id)}
-                                                >
-                                                    <Trash2 size={16} />
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                <InventorySection
+                    searchTerm={searchTerm}
+                    setSearchTerm={setSearchTerm}
+                    setShowAddModal={setShowAddModal}
+                    filteredItems={filteredItems}
+                    handleSellClick={handleSellClick}
+                    handleEditClick={handleEditClick}
+                    handleDeleteItem={handleDeleteItem}
+                    formatDate={formatDate}
+                />
             )}
+
             {activeTab === 'transactions' && (
-                <div className="transactions-section">
-                    <h2>Transaction History</h2>
-                    <div className="transaction-actions">
-                        <input
-                            type="text"
-                            placeholder="Search transactions..."
-                            value={transactionSearchTerm}
-                            onChange={(e) => setTransactionSearchTerm(e.target.value)}
-                            className="search-input"
-                        />
-                    </div>
-                    <div className="transaction-table">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>TRANSACTION ID</th>
-                                    <th>ITEM ID</th>
-                                    <th>ITEM NAME</th>
-                                    <th>CATEGORY</th>
-                                    <th>QUANTITY</th>
-                                    <th>PRICE</th>
-                                    <th>TOTAL AMOUNT</th>
-                                    <th>TRANSACTION TYPE</th>
-                                    <th>DATE & TIME</th>
-                                    <th>ACTIONS</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {filteredTransactions.length > 0 ? (
-                                    filteredTransactions.map((transaction, index) => (
-                                        <tr key={transaction.id || index}>
-                                            <td>{transaction.id || `TR-${Date.now().toString().slice(-6)}-${index}`}</td>
-                                            <td>{transaction.itemId}</td>
-                                            <td>{transaction.itemName}</td>
-                                            <td>{transaction.category}</td>
-                                            <td>{transaction.quantity}</td>
-                                            <td>₹{transaction.price}</td>
-                                            <td>₹{transaction.totalAmount}</td>
-                                            <td>
-                                                <span className={`status-badge ${transaction.transactionType.toLowerCase()}`}>
-                                                    {transaction.transactionType}
-                                                </span>
-                                            </td>
-                                            <td>{formatDate(transaction.transactionDate)}</td>
-                                            <td>
-                                                <div className="action-buttons">
-                                                    <button
-                                                        className="delete-btn"
-                                                        onClick={() => handleDeleteTransaction(transaction.id)}
-                                                    >
-                                                        <Trash2 size={16} />
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    ))
-                                ) : (
-                                    <tr>
-                                        <td colSpan="10" className="no-data">No transactions found</td>
-                                    </tr>
-                                )}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                <TransactionsSection
+                    transactionSearchTerm={transactionSearchTerm}
+                    setTransactionSearchTerm={setTransactionSearchTerm}
+                    filteredTransactions={filteredTransactions}
+                    handleDeleteTransaction={handleDeleteTransaction}
+                    formatDate={formatDate}
+                />
             )}
             {showAddModal && (
                 <AddItemModal
