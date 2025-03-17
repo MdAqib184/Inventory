@@ -17,16 +17,18 @@ const app = express();
 // Middleware
 app.use(cors({ 
     origin: ['https://inventory-liard.vercel.app', 'http://localhost:3000'], 
-    credentials: true 
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
 }));
 app.use(express.json());
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
-    saveUninitialized: false,
+    saveUninitialized: true,
     cookie: {
-        secure: true, 
-        sameSite: 'none' 
+        secure: process.env.NODE_ENV === 'production', // Only secure in production
+        sameSite: 'none',
+        maxAge: 24 * 60 * 60 * 1000 // 24 hours
     }
 }));
 

@@ -75,10 +75,10 @@ router.get('/google', passport.authenticate('google', {
     scope: ['profile', 'email']
 }));
 router.get('/google/callback',
-    passport.authenticate('google', {
-        successRedirect: 'http://localhost:3000/dashboard',
-        failureRedirect: 'http://localhost:3000/login'
-    })
+  passport.authenticate('google', {
+    successRedirect: 'https://inventory-liard.vercel.app/dashboard',
+    failureRedirect: 'https://inventory-liard.vercel.app/login'
+  })
 );
 
 // Check authentication status
