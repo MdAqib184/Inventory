@@ -1,44 +1,55 @@
-const mongoose = require('mongoose');
+// server/models/Transaction.js
+const { DataTypes } = require('sequelize');
+const { sequelize } = require('../config/database');
 
-const TransactionSchema = new mongoose.Schema({
-    itemId: {
-        type: String,
-        required: true
-    },
-    itemName: {
-        type: String,
-        required: true
-    },
-    category: {
-        type: String,
-        required: true
-    },
-    quantity: {
-        type: Number,
-        required: true
-    },
-    price: {
-        type: Number,
-        required: true
-    },
-    totalAmount: {
-        type: Number,
-        required: true
-    },
-    // transactionType: {
-    //     type: String,
-    //     enum: ['Sale', 'Restock'],
-    //     required: true
-    // },
-    transactionDate: {
-        type: Date,
-        default: Date.now
-    },
-    userId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
+const Transaction = sequelize.define('Transaction', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
+  itemId: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    references: {
+      model: 'InventoryItems',
+      key: 'id'
     }
+  },
+  itemName: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  category: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  quantity: {
+    type: DataTypes.INTEGER,
+    allowNull: false
+  },
+//   price: {
+//     type: DataTypes.FLOAT,
+//     allowNull: false
+//   },
+  totalAmount: {
+    type: DataTypes.FLOAT,
+    allowNull: false
+  },
+  transactionDate: {
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW
+  },
+  userId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: 'Users',
+      key: 'id'
+    }
+  }
+}, {
+  timestamps: true
 });
 
-module.exports = mongoose.model('Transaction', TransactionSchema);
+module.exports = Transaction;

@@ -1,5 +1,4 @@
 // server/routes/auth.js
-
 const router = require('express').Router();
 const passport = require('passport');
 const User = require('../models/User');
@@ -10,7 +9,7 @@ passport.use(new LocalStrategy(
   { usernameField: 'email' },
   async (email, password, done) => {
     try {
-      const user = await User.findOne({ email });
+      const user = await User.findOne({ where: { email } });
       if (!user) return done(null, false, { message: 'Incorrect email.' });
       
       const isMatch = await user.comparePassword(password);
@@ -26,22 +25,19 @@ passport.use(new LocalStrategy(
 // Register new user
 router.post('/register', async (req, res) => {
   const { name, email, password } = req.body;
-  
   try {
     // Check if user exists
-    const existingUser = await User.findOne({ email });
+    const existingUser = await User.findOne({ where: { email } });
     if (existingUser) {
       return res.status(400).json({ message: 'User already exists' });
     }
     
     // Create new user
-    const user = new User({
+    const user = await User.create({
       name,
       email,
       password
     });
-    
-    await user.save();
     
     res.status(201).json({ message: 'User registered successfully' });
   } catch (error) {
@@ -57,10 +53,10 @@ router.post('/login', (req, res, next) => {
     
     req.login(user, (err) => {
       if (err) return next(err);
-      return res.json({ 
+      return res.json({
         message: 'Login successful',
         user: {
-          id: user._id,
+          id: user.id,
           name: user.name,
           email: user.email,
           picture: user.picture || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.name)
@@ -72,8 +68,9 @@ router.post('/login', (req, res, next) => {
 
 // Google OAuth routes
 router.get('/google', passport.authenticate('google', {
-    scope: ['profile', 'email']
+  scope: ['profile', 'email']
 }));
+
 router.get('/google/callback',
   passport.authenticate('google', {
     successRedirect: 'http://localhost:3000/dashboard',
@@ -83,21 +80,21 @@ router.get('/google/callback',
 
 // Check authentication status
 router.get('/status', (req, res) => {
-    if (req.isAuthenticated()) {
-        res.json({ isAuthenticated: true, user: req.user });
-    } else {
-        res.json({ isAuthenticated: false });
-    }
+  if (req.isAuthenticated()) {
+    res.json({ isAuthenticated: true, user: req.user });
+  } else {
+    res.json({ isAuthenticated: false });
+  }
 });
 
 // Logout
 router.get('/logout', (req, res) => {
-    req.logout((err) => {
+  req.logout((err) => {
     if (err) {
-        return res.status(500).json({ message: 'Error logging out' });
+      return res.status(500).json({ message: 'Error logging out' });
     }
-        res.json({ message: 'Logged out successfully' });
-    });
+    res.json({ message: 'Logged out successfully' });
+  });
 });
 
 module.exports = router;

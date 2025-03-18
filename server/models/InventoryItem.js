@@ -1,43 +1,48 @@
 // server/models/InventoryItem.js
-const mongoose = require('mongoose');
+const { DataTypes } = require('sequelize');
+const { sequelize } = require('../config/database');
 
-const InventoryItemSchema = new mongoose.Schema({
-    id: {
-    type: String,
-    required: true,
-    unique: true
-    },
-    name: {
-    type: String,
-    required: true
-    },
-    category: {
-    type: String,
-    required: true
-    },
-    price: {
-    type: Number,
-    required: true
-    },
-    stock: {
-    type: Number,
-    required: true,
-    default: 0
-    },
-    status: {
-    type: String,
-    enum: ['In Stock', 'Low Stock', 'Out of Stock'],
-    default: 'In Stock'
-    },
-    lastUpdated: {
-    type: Date,
-    default: Date.now
-    },
-    userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
+const InventoryItem = sequelize.define('InventoryItem', {
+  id: {
+    type: DataTypes.STRING,
+    primaryKey: true,
+    allowNull: false
+  },
+  name: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  category: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  price: {
+    type: DataTypes.FLOAT,
+    allowNull: false
+  },
+  stock: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: 0
+  },
+  status: {
+    type: DataTypes.ENUM('In Stock', 'Low Stock', 'Out of Stock'),
+    defaultValue: 'In Stock'
+  },
+  lastUpdated: {
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW
+  },
+  userId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: 'Users',
+      key: 'id'
     }
+  }
+}, {
+  timestamps: true
 });
 
-module.exports = mongoose.model('InventoryItem', InventoryItemSchema);
+module.exports = InventoryItem;
