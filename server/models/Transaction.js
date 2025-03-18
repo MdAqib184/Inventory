@@ -25,11 +25,11 @@ const TransactionSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    transactionType: {
-        type: String,
-        enum: ['Sale', 'Restock'],
-        required: true
-    },
+    // transactionType: {
+    //     type: String,
+    //     enum: ['Sale', 'Restock'],
+    //     required: true
+    // },
     transactionDate: {
         type: Date,
         default: Date.now

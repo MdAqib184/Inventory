@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const mongoose = require('mongoose');
 const Transaction = require('../models/Transaction');
 
 const isAuthenticated = (req, res, next) => {
@@ -33,37 +34,31 @@ router.post('/', async (req, res) => {
 });
 
 // Delete transaction
+
 router.delete('/:id', async (req, res) => {
     try {
-        // Check if the ID is valid MongoDB ObjectId
-        const isMongoId = /^[0-9a-fA-F]{24}$/.test(req.params.id);
-        
-        let transaction;
-        if (isMongoId) {
-            // If it's a valid MongoDB ObjectId, try to find by _id
-            transaction = await Transaction.findOne({
-                _id: req.params.id,
-                userId: req.user._id
-            });
-        } else {
-            // If it's not a valid MongoDB ObjectId, try to find by the custom id field
-            transaction = await Transaction.findOne({
-                id: req.params.id,
-                userId: req.user._id
-            });
-        }
-        
-        if (!transaction) {
-            return res.status(404).json({ message: 'Transaction not found' });
-        }
-        
-        // Remove the transaction using the correct ID
-        await Transaction.findByIdAndDelete(transaction._id);
-        res.json({ message: 'Transaction deleted successfully' });
+      
+      if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+        return res.status(400).json({ message: 'Invalid transaction ID' });
+      }
+      
+      const query = {
+        _id: req.params.id,
+        userId: req.user._id
+      };
+      
+      const deletedTransaction = await Transaction.findOneAndDelete(query);
+      
+      if (!deletedTransaction) {
+        return res.status(404).json({ message: 'Transaction not found' });
+      }
+      
+      res.json({ message: 'Transaction deleted successfully' });
     } catch (error) {
-        console.error('Error deleting transaction:', error);
-        res.status(500).json({ message: error.message });
+      console.error('Error deleting transaction:', error);
+      res.status(500).json({ message: 'Internal server error', error: error.message });
     }
-});
+  });
+
 
 module.exports = router;

@@ -76,8 +76,8 @@ router.get('/google', passport.authenticate('google', {
 }));
 router.get('/google/callback',
   passport.authenticate('google', {
-    successRedirect: 'https://inventory-liard.vercel.app/dashboard',
-    failureRedirect: 'https://inventory-liard.vercel.app/login'
+    successRedirect: 'http://localhost:3000/dashboard',
+    failureRedirect: 'http://localhost:3000/login'
   })
 );
 
