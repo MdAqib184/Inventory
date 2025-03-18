@@ -5,14 +5,12 @@ export const TransactionsTable = ({ transactions, onDelete, formatDate }) => (
     <table>
       <thead>
         <tr>
-          <th>TRANSACTION ID</th>
-          <th>ITEM ID</th>
-          <th>ITEM NAME</th>
+          <th>TR_ID</th>
+          <th>IT_ID</th>
+          <th>NAME</th>
           <th>CATEGORY</th>
           <th>QUANTITY</th>
-          <th>PRICE</th>
           <th>TOTAL AMOUNT</th>
-          <th>TRANSACTION TYPE</th>
           <th>DATE & TIME</th>
           <th>ACTIONS</th>
         </tr>
@@ -21,7 +19,7 @@ export const TransactionsTable = ({ transactions, onDelete, formatDate }) => (
         {transactions.length > 0 ? (
           transactions.map((transaction, index) => (
             <TransactionsRow
-              key={transaction.id || index}
+              key={transaction._id || index}
               transaction={transaction}
               index={index}
               onDelete={onDelete}

@@ -2,7 +2,7 @@ import React, { createContext, useState, useEffect } from 'react';
 import axios from 'axios';
 
 // Define the API URL
-const API_URL = "https://inventory-eef5.onrender.com";
+//const API_URL = "http://localhost:5000";
 
 export const AuthContext = createContext();
 
@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }) => {
     // Check authentication status
     const checkAuth = async () => {
       try {
-        const res = await axios.get(`${API_URL}/auth/status`);
+        const res = await axios.get('/auth/status');
         if (res.data.isAuthenticated) {
           setUser(res.data.user);
           setIsAuthenticated(true);
@@ -44,7 +44,7 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     try {
       setLoading(true);
-      await axios.get(`${API_URL}/auth/logout`);
+      await axios.get('/auth/logout');
       setUser(null);
       setIsAuthenticated(false);
       setError(null);
@@ -60,7 +60,7 @@ export const AuthProvider = ({ children }) => {
   const refreshAuth = async () => {
     try {
       setLoading(true);
-      const res = await axios.get(`${API_URL}/auth/status`);
+      const res = await axios.get('/auth/status');
       if (res.data.isAuthenticated) {
         setUser(res.data.user);
         setIsAuthenticated(true);

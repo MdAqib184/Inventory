@@ -32,7 +32,7 @@ const Login = () => {
   }
 
   const handleGoogleLogin = () => {
-    window.location.href = 'https://inventory-eef5.onrender.com/auth/google';
+    window.location.href = 'http://localhost:5000/auth/google';
   };
   
   const handleChange = (e) => {
@@ -92,9 +92,7 @@ const Login = () => {
           </div>
           
           <button type="submit" className="primary-btn">Login</button>
-        </form>
-        
-        <div className="divider">
+          <div className="divider">
           <span>OR</span>
         </div>
         
@@ -105,6 +103,8 @@ const Login = () => {
         <p>
           Don't have an account? <Link to="/signup">Sign up</Link>
         </p>
+        </form>
+        
       </div>
     </div>
   );
