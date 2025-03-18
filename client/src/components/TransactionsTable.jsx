@@ -19,7 +19,7 @@ export const TransactionsTable = ({ transactions, onDelete, formatDate }) => (
         {transactions.length > 0 ? (
           transactions.map((transaction, index) => (
             <TransactionsRow
-              key={transaction._id || index}
+              key={transaction.id || index}
               transaction={transaction}
               index={index}
               onDelete={onDelete}

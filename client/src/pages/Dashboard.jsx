@@ -99,20 +99,20 @@ const Dashboard = () => {
     // New function to handle transaction deletion
     const handleDeleteTransaction = async (id) => {
         if (!id) {
-            console.error("Transaction ID is undefined!");
-            return;
+          console.error("Transaction ID is undefined!");
+          return;
         }
-    
+        
         if (window.confirm('Are you sure you want to delete this transaction?')) {
-            try {
-                await axios.delete(`/api/transactions/${id}`);
-                fetchTransactions();
-                fetchStats(); // If needed
-            } catch (error) {
-                console.error('Failed to delete transaction:', error);
-            }
+          try {
+            await axios.delete(`/api/transactions/${id}`);
+            fetchTransactions();
+            fetchStats();
+          } catch (error) {
+            console.error('Failed to delete transaction:', error);
+          }
         }
-    };
+      };
     
 
     // Updated to handle multi-quantity sales
