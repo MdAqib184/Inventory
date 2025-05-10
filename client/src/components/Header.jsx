@@ -1,18 +1,32 @@
-import React from 'react';
-import { AuthContext } from '../contexts/AuthContext';
+import React from "react";
+import { useNavigate } from "react-router-dom";
 
 export const Header = () => {
-  const { user, logout } = React.useContext(AuthContext);
-  
+  const navigate = useNavigate();
+
+  // Fetch user data from local storage
+  const user = JSON.parse(localStorage.getItem("user"));
+  const logout = () => {
+    localStorage.removeItem("user");
+
+    navigate("/login");
+  };
+
   return (
     <header className="dashboard-header">
-      <h1>Mama Inventory Management</h1>
+      <h1>Variety Collection</h1>
       <div className="user-info">
         {user && (
           <>
-            <img src={user.picture} alt={user.name} className="user-avatar" />
+            <img
+              src={`${process.env.PUBLIC_URL}/umair.jpg`}
+              alt={user.name}
+              className="user-avatar"
+            />
             <span>{user.name}</span>
-            <button onClick={logout} className="logout-btn">Logout</button>
+            <button onClick={logout} className="logout-btn">
+              Logout
+            </button>
           </>
         )}
       </div>
