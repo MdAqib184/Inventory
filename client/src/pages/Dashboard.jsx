@@ -9,6 +9,7 @@ import "../styles/Dashboard.css";
 import AddItemModal from "../components/AddItemModal";
 import EditItemModal from "../components/EditItemModal";
 import SellModal from "../components/SellModal";
+import RestockModal from "../components/RestockModal";
 
 //const API_URL = "http://localhost:5000";
 
@@ -24,6 +25,8 @@ const Dashboard = () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showSellModal, setShowSellModal] = useState(false);
+  const [showRestockModal, setShowRestockModal] = useState(false);
+  const [restockingItem, setRestockingItem] = useState(null);
   const [editingItem, setEditingItem] = useState(null);
   const [sellingItem, setSellingItem] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
@@ -199,6 +202,26 @@ const Dashboard = () => {
     }
   };
 
+  const handleRestockItem = async (id, quantity) => {
+    try {
+      const itemToRestock = inventoryItems.find((item) => item.id === id);
+      if (!itemToRestock) return;
+
+      const updatedItem = {
+        ...itemToRestock,
+        stock: itemToRestock.stock + quantity,
+      };
+
+      console.log(updatedItem);
+
+      await axios.put(`/api/inventory/${id}`, updatedItem);
+      fetchInventory();
+      fetchStats();
+    } catch (error) {
+      console.error("Failed to restock item:", error);
+    }
+  };
+
   const handleEditClick = (item) => {
     setEditingItem(item);
     setShowEditModal(true);
@@ -207,6 +230,11 @@ const Dashboard = () => {
   const handleSellClick = (item) => {
     setSellingItem(item);
     setShowSellModal(true);
+  };
+
+  const handleRestockClick = (item) => {
+    setRestockingItem(item);
+    setShowRestockModal(true);
   };
 
   const filteredItems = inventoryItems.filter(
@@ -257,6 +285,7 @@ const Dashboard = () => {
           handleSellClick={handleSellClick}
           handleEditClick={handleEditClick}
           handleDeleteItem={handleDeleteItem}
+          handleRestockClick={handleRestockClick}
           formatDate={formatDate}
         />
       )}
@@ -294,6 +323,16 @@ const Dashboard = () => {
             setSellingItem(null);
           }}
           onSell={handleSellItem}
+        />
+      )}
+      {showRestockModal && restockingItem && (
+        <RestockModal
+          item={restockingItem}
+          onClose={() => {
+            setShowRestockModal(false);
+            setRestockingItem(null);
+          }}
+          onRestock={handleRestockItem}
         />
       )}
     </div>

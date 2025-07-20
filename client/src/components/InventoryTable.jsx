@@ -1,6 +1,12 @@
-import { InventoryRow } from './InventoryRow';
+import { InventoryRow } from "./InventoryRow";
 
-export const InventoryTable = ({ items, onSellClick, onEditClick, onDeleteClick }) => (
+export const InventoryTable = ({
+  items,
+  onSellClick,
+  onEditClick,
+  onDeleteClick,
+  onRestockClick,
+}) => (
   <div className="inventory-table">
     <table>
       <thead>
@@ -16,13 +22,14 @@ export const InventoryTable = ({ items, onSellClick, onEditClick, onDeleteClick 
         </tr>
       </thead>
       <tbody>
-        {items.map(item => (
+        {items.map((item) => (
           <InventoryRow
             key={item.id}
             item={item}
             onSellClick={onSellClick}
             onEditClick={onEditClick}
             onDeleteClick={onDeleteClick}
+            onRestockClick={onRestockClick}
           />
         ))}
       </tbody>

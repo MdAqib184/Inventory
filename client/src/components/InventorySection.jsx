@@ -1,5 +1,5 @@
-import { InventoryActions } from './InventoryActions';
-import { InventoryTable } from './InventoryTable';
+import { InventoryActions } from "./InventoryActions";
+import { InventoryTable } from "./InventoryTable";
 
 export const InventorySection = ({
   searchTerm,
@@ -8,7 +8,8 @@ export const InventorySection = ({
   filteredItems,
   handleSellClick,
   handleEditClick,
-  handleDeleteItem
+  handleDeleteItem,
+  handleRestockClick,
 }) => (
   <div className="inventory-section">
     <InventoryActions
@@ -21,6 +22,7 @@ export const InventorySection = ({
       onSellClick={handleSellClick}
       onEditClick={handleEditClick}
       onDeleteClick={handleDeleteItem}
+      onRestockClick={handleRestockClick}
     />
   </div>
 );

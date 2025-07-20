@@ -1,6 +1,12 @@
-import { Trash2, Edit } from 'lucide-react';
+import { Trash2, Edit } from "lucide-react";
 
-export const InventoryRow = ({ item, onSellClick, onEditClick, onDeleteClick }) => (
+export const InventoryRow = ({
+  item,
+  onSellClick,
+  onEditClick,
+  onDeleteClick,
+  onRestockClick,
+}) => (
   <tr>
     <td>{item.id}</td>
     <td>{item.name}</td>
@@ -12,7 +18,11 @@ export const InventoryRow = ({ item, onSellClick, onEditClick, onDeleteClick }) 
       </div>
     </td>
     <td>
-      <span className={`status-badge ${item.status.toLowerCase().replace(/\s+/g, '-')}`}>
+      <span
+        className={`status-badge ${item.status
+          .toLowerCase()
+          .replace(/\s+/g, "-")}`}
+      >
         {item.status}
       </span>
     </td>
@@ -25,6 +35,13 @@ export const InventoryRow = ({ item, onSellClick, onEditClick, onDeleteClick }) 
           disabled={item.stock <= 0}
         >
           Sell
+        </button>
+        <button
+          className="sell-btn"
+          onClick={() => onRestockClick(item)}
+          // disabled={item.stock <= 0}
+        >
+          Restock
         </button>
         <button className="edit-btn" onClick={() => onEditClick(item)}>
           <Edit size={16} />
